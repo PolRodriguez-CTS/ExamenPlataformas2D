@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
 
         Movement();
 
+        _animator.SetBool("isJumping", !IsGrounded());
+
         if(_jumpAction.WasPressedThisFrame() && IsGrounded())
         {
             Jump();
@@ -52,15 +54,16 @@ public class PlayerController : MonoBehaviour
         if (_moveInput.x > 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
-            //animacion de moverse booleana
+            _animator.SetBool("isRunning", true);
         }
         else if (_moveInput.x < 0)
         {
             transform.rotation = Quaternion.Euler(0, 180, 0);
+            _animator.SetBool("isRunning", true);
         }
         else
         {
-
+            _animator.SetBool("isRunning", false);
         }
     }
 
