@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    //Componentes
     private Rigidbody2D _rigidbody;
     private Animator _animator;
+    [SerializeField] private Transform _playerSpawn;
 
     //Inputs
     private InputAction _moveAction;
@@ -13,7 +15,6 @@ public class PlayerController : MonoBehaviour
     private InputAction _jumpAction;
 
     //Parámetros
-
     [SerializeField] private int _playerSpeed = 5;
     [SerializeField] private int _jumpForce = 2;
 
@@ -28,6 +29,11 @@ public class PlayerController : MonoBehaviour
 
         _moveAction = InputSystem.actions["Move"];
         _jumpAction = InputSystem.actions["Jump"];
+    }
+
+    void Start()
+    {
+        transform.position = _playerSpawn.position;
     }
 
     void Update()

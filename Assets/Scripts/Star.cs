@@ -13,7 +13,7 @@ public class Star : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            _sceneLoader.Victory();
+            _sceneLoader.ChangeScene("Victory");
             Destroy(gameObject);
         }
     }
