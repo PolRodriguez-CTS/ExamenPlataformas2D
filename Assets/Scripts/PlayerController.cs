@@ -17,17 +17,74 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int _playerSpeed = 5;
     [SerializeField] private int _jumpForce = 2;
 
+    //Sensor
+    [SerializeField] private Transform _sensorPosition;
+    [SerializeField] private Vector2 _sensorSize = new Vector2(0.5f, 0.5f);
+
     void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
 
-        //_moveInput = InputSystem.actions[]
+        _moveAction = InputSystem.actions["Move"];
+        _jumpAction = InputSystem.actions["Jump"];
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        _moveInput = _moveAction.ReadValue<Vector2>();
+
+        Movement();
+
+        if(_jumpAction.WasPressedThisFrame() && IsGrounded())
+        {
+            Jump();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        _rigidbody.linearVelocity = new Vector2(_moveInput.x * _playerSpeed, _rigidbody.linearVelocityY);
+    }
+
+    void Movement()
+    {
+        if (_moveInput.x > 0)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            //animacion de moverse booleana
+        }
+        else if (_moveInput.x < 0)
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else
+        {
+
+        }
+    }
+
+    void Jump()
+    {
+        _rigidbody.AddForce(transform.up * Mathf.Sqrt(_jumpForce * -2 * Physics2D.gravity.y), ForceMode2D.Impulse);
+    }
+
+    bool IsGrounded()
+    {
+        Collider2D[] sensor = Physics2D.OverlapBoxAll(_sensorPosition.position, _sensorSize, 0);
+        foreach (Collider2D collision in sensor)
+        {
+            if (collision.gameObject.layer == 3)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_sensorPosition.position, _sensorSize);
     }
 }
